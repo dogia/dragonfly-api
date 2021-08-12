@@ -10,4 +10,4 @@ function load(array $files){
     }
 }
 
-load(['functions']);
+load(['functions', 'database']);
