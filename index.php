@@ -1,9 +1,8 @@
 <?php
 
-const INTEGRITY = true;
 const DS = DIRECTORY_SEPARATOR;
 define('DOCUMENT_ROOT', dirname(__FILE__));
 define('DOCUMENT_SRC', dirname(__FILE__).DS.'src');
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+require_once DOCUMENT_SRC.DS.'functions.php';
+$error_handler = set_error_handler('error_handler', E_ALL);

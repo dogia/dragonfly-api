@@ -1,9 +1,4 @@
 <?php
-namespace Dogia\Dragonfly\Functions;
-
-if(!defined('INTEGRITY')){
-    die();
-}
 
 $response_api = array('response' => null, 'status' => null, 'errors' => array());
 
@@ -44,7 +39,6 @@ function error_handler($errno, $errstr, $errfile, $errline)
     /* No ejecutar el gestor de errores interno de PHP */
     return true;
 }
-$error_handler = set_error_handler('Dogia\Dragonfly\Functions\error_handler');
 
 function format_utf8(&$response){
     $response = (array) $response;

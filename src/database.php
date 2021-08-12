@@ -16,7 +16,11 @@ class DB {
         DB::connect();
     }
 
-    public function connect(){
+    public static function connect(){
+        if(DB::$config == null) {
+            respond('Database without valid configuration, check .env file!');
+        }
+
         switch(DB::$config['type']){
             case 'mysql':
             case 'mariadb':
@@ -27,6 +31,15 @@ class DB {
                 $port = DB::$config['port'];
                 
                 DB::$link = mysqli_connect($host, $user, $password, $db, $port);
+                break;
+        }
+    }
+
+    public static function disconnect(){
+        switch(DB::$config['type']){
+            case 'mysql':
+            case 'mariadb':
+                mysqli_close(DB::$link);
                 break;
         }
     }

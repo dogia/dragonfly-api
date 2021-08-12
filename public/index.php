@@ -1,15 +1,19 @@
 <?php
 
+
 require('../index.php');
-require(DOCUMENT_SRC.DS.'autoload.php');
+require(DOCUMENT_ROOT.DS.'vendor'.DS.'autoload.php');
+
+$dotenv = Dotenv\Dotenv::createImmutable(DOCUMENT_ROOT);
+$dotenv->load();
 
 $public = array();
 
 $file = '';
 
 if(!file_exists($file)){
-    Dogia\Dragonfly\Functions\respond("Can't solve your request", 404);
+    respond("Can't solve your request", 404);
 }
 
 
-Dogia\Dragonfly\Functions\respond('Request without response');
+respond('Request without response');
