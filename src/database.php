@@ -3,6 +3,7 @@
 class DB {
     private static $link = null;
     private static $config = null;
+    private static $result = null;
     function __construct(){
         DB::$config = [
             'type' => $_ENV['DB_TYPE'],
@@ -32,6 +33,53 @@ class DB {
                 
                 DB::$link = mysqli_connect($host, $user, $password, $db, $port);
                 break;
+        }
+    }
+
+    private static function replaceInQuery(&$haystack, $replace){
+        $replacePos = null;
+        $i=0;
+        $len = strlen($haystack);
+        while($i < $len && $replacePos === null){
+            $pos = strpos($haystack, '?', $i);
+            $posScaped = strpos($haystack, '\\?', $i);
+            
+            if($pos != ($posScaped + 1) && $pos !== false || $posScaped === false){
+                $replacePos = $pos;
+            }else if($pos == ($posScaped + 1)){
+                $i = $pos;
+            }
+            
+            $i++;
+        }
+        if($replacePos === null){
+            return;
+        }
+        $haystack = substr_replace($haystack, $replace, $pos, 1);
+    }
+
+    public static function query($template, ...$values){
+        foreach($values as $value){
+            $value = mysqli_real_escape_string(DB::$link, $value);
+            $value = str_replace('?', '\?', $value);
+            DB::replaceInQuery($template, $value);
+        }
+        $template = str_replace('\\?', '?', $template);
+
+        DB::$result = mysqli_query(DB::$link, $template);
+    }
+
+    public static function getResult(){
+        return DB::$result;
+    }
+
+    public static function getArray(){
+        return mysqli_fetch_assoc(DB::$result);
+    }
+
+    public static function flush(){
+        if(DB::$result){
+            mysqli_free_result(DB::$result);
         }
     }
 
